@@ -1,0 +1,32 @@
+---
+# tasks file for ajsalminen.rsyslog
+
+- name: Install rsyslog packages.
+  apt:
+    pkg={{item}}
+    state=present
+  with_items: "{{ rsyslog_packages }}"
+  tags: rsyslog
+
+- name: Install main rsyslog.conf
+  template:
+    src=rsyslog.conf.j2
+    dest=/etc/rsyslog.conf
+    mode=0644
+    owner=root
+    group=root
+  notify:
+    - Restart rsyslog.
+  tags: rsyslog
+
+- name: Install rsyslog.d config fragments.
+  template:
+    src=rsyslog_fragment.conf.j2
+    dest=/etc/rsyslog.d/{{item.key}}.conf
+    mode=0644
+    owner=root
+    group=root
+  with_dict: "{{ rsyslog_config_fragments }}"
+  notify:
+    - Restart rsyslog.
+  tags: rsyslog
