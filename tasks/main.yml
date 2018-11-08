@@ -3,9 +3,7 @@
 
 - name: Install rsyslog packages.
   apt:
-    pkg={{item}}
-    state=present
-  with_items: "{{ rsyslog_packages }}"
+    name: "{{ rsyslog_packages }}"
   tags: rsyslog
 
 - name: Install main rsyslog.conf
